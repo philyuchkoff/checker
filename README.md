@@ -41,15 +41,15 @@
 ### Параметры запуска
 **Стандартный запуск без аргументов**  (проверяет cloud.ru):
 
-    go run main.go
+    go run checker.go
 
 **Запуск с кастомным URL**:
 
-    go run main.go -url=https://example.com
+    go run checker.go -url=https://example.com
 
 **Дополнительные параметры**:
 
-    go run main.go -url=https://example.com -interval=60 -port=9090 -timeout=15
+    go run checker.go -url=https://example.com -interval=60 -port=9090 -timeout=15
 
 **Доступные аргументы:**
 
@@ -59,4 +59,4 @@
 -   `-timeout`  - таймаут запроса в секундах (по умолчанию 10)
 
 
-Для запуска выполнить `go run check.go` с нужными аргументами и открыть `http://localhost:8080/` в браузере  или `http://localhost:8080/metrics` в Prometheus.
+Для запуска выполнить `go run checker.go` с нужными аргументами и открыть `http://localhost:8080/` в браузере  или `http://localhost:8080/metrics` в Prometheus.
