@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -37,12 +38,7 @@ type Metrics struct {
 }
 
 var (
-	config  = Config{
-		TargetURL:      "https://cloud.ru",
-		CheckInterval:  30 * time.Second,
-		ServerPort:     "8080",
-		RequestTimeout: 10 * time.Second,
-	}
+	config  Config
 	metrics = Metrics{
 		ProgramStartTime: time.Now(),
 	}
@@ -50,6 +46,27 @@ var (
 )
 
 func main() {
+	// Парсим аргументы командной строки
+	targetURL := flag.String("url", "https://cloud.ru", "URL сайта для мониторинга")
+	checkInterval := flag.Int("interval", 30, "Интервал проверки в секундах")
+	serverPort := flag.String("port", "8080", "Порт для HTTP сервера")
+	requestTimeout := flag.Int("timeout", 10, "Таймаут запроса в секундах")
+
+	flag.Parse()
+
+	// Инициализируем конфиг
+	config = Config{
+		TargetURL:      *targetURL,
+		CheckInterval:  time.Duration(*checkInterval) * time.Second,
+		ServerPort:     *serverPort,
+		RequestTimeout: time.Duration(*requestTimeout) * time.Second,
+	}
+
+	logger.Printf("Starting monitoring for URL: %s", config.TargetURL)
+	logger.Printf("Check interval: %v", config.CheckInterval)
+	logger.Printf("Server port: %s", config.ServerPort)
+	logger.Printf("Request timeout: %v", config.RequestTimeout)
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
