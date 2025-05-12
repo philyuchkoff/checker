@@ -1,6 +1,6 @@
 FROM golang:1.21-alpine AS builder
 WORKDIR /app
-COPY go.mod .   # Копируем go.mod, но не скачиваем зависимости
+COPY go.mod .
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o app .
 
