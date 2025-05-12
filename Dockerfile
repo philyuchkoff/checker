@@ -6,7 +6,6 @@ WORKDIR /app
 
 # Копируем файлы модулей и скачиваем зависимости
 COPY go.mod go.sum ./
-RUN go mod download
 
 # Копируем исходный код
 COPY . .
