@@ -41,15 +41,15 @@
 ### Параметры запуска
 **Стандартный запуск без аргументов**  (проверяет cloud.ru):
 
-    go run main.go
+    go run checker.go
 
 **Запуск с кастомным URL**:
 
-    go run main.go -url=https://example.com
+    go run checker.go -url=https://example.com
 
 **Дополнительные параметры**:
 
-    go run main.go -url=https://example.com -interval=60 -port=9090 -timeout=15
+    go run checker.go -url=https://example.com -interval=60 -port=9090 -timeout=15
 
 **Доступные аргументы:**
 
