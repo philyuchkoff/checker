@@ -1,25 +1,19 @@
-# Этап 1: Сборка приложения
 FROM golang:1.21-alpine AS builder
-
 WORKDIR /app
 
-# Сначала копируем только файлы модулей
-COPY go.mod .
-COPY go.sum .
+# Копируем только файлы модулей сначала
+COPY go.mod go.sum ./
 
-# Проверяем наличие go.sum (опционально)
-RUN test -f go.sum || (echo "Error: go.sum not found!" && exit 1)
+# Загружаем зависимости с проверкой
+RUN if [ -f go.sum ]; then \
+    GOPROXY=https://proxy.golang.org,direct go mod download; \
+    else \
+    echo "No go.sum - skipping download"; \
+    fi
 
-RUN go mod download
-
-# Копируем остальные файлы
 COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -o app .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o speedmon .
-
-# Этап 2: Финальный образ
 FROM alpine:3.18
-WORKDIR /app
-COPY --from=builder /app/speedmon .
-EXPOSE 8080
-CMD ["./speedmon"]
+COPY --from=builder /app/app .
+CMD ["./app"]
