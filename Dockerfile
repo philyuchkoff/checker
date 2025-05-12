@@ -1,31 +1,19 @@
-# Используем многоэтапную сборку
-# Этап 1: Сборка приложения
 FROM golang:1.21-alpine AS builder
-
 WORKDIR /app
 
-# Копируем файлы модулей и скачиваем зависимости
+# Копируем только файлы модулей сначала
 COPY go.mod go.sum ./
 
-# Копируем исходный код
+# Загружаем зависимости с проверкой
+RUN if [ -f go.sum ]; then \
+    GOPROXY=https://proxy.golang.org,direct go mod download; \
+    else \
+    echo "No go.sum - skipping download"; \
+    fi
+
 COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -o app .
 
-# Собираем приложение
-RUN CGO_ENABLED=0 GOOS=linux go build -o speedmon .
-
-# Этап 2: Создаем минимальный образ
 FROM alpine:3.18
-
-WORKDIR /app
-
-# Копируем бинарник из builder
-COPY --from=builder /app/speedmon .
-
-# Устанавливаем tzdata для корректного времени
-RUN apk add --no-cache tzdata
-
-# Открываем порт для метрик
-EXPOSE 8080
-
-# Запускаем приложение с флагами по умолчанию
-CMD ["./speedmon"]
+COPY --from=builder /app/app .
+CMD ["./app"]
