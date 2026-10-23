@@ -26,15 +26,15 @@ type Config struct {
 // Metrics содержит все собираемые метрики
 type Metrics struct {
 	sync.RWMutex
-	TotalRequests      int64
-	FailedRequests     int64
-	LastLoadTime       float64
-	LastTCPHandshake   float64
-	LastTTFB           float64
-	LastContentLength  int64
-	LastStatusCode     int
-	ProgramStartTime   time.Time
-	LastCheckTime      time.Time
+	TotalRequests     int64
+	FailedRequests    int64
+	LastLoadTime      float64
+	LastTCPHandshake  float64
+	LastTTFB          float64
+	LastContentLength int64
+	LastStatusCode    int
+	ProgramStartTime  time.Time
+	LastCheckTime     time.Time
 }
 
 var (
